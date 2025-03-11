@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const dbConnect = async (): Promise<typeof mongoose> => {
+const dbConnect = async (): Promise<typeof mongoose.connection> => {
     try {
         await mongoose.connect('mongodb://127.0.0.1:27017/socialnetwork');
-        console.log('✅ Database connected.');
+        console.log('✅ Connected to MongoSocial database.');
         return mongoose.connection;
     } catch (error) {
         console.error('❌ Database connection error:', error);
@@ -12,3 +12,4 @@ const dbConnect = async (): Promise<typeof mongoose> => {
 };
 
 export default dbConnect;
+

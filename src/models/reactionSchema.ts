@@ -26,22 +26,18 @@ const reactionSchema = new Schema<IReaction>(
         },
         createdAt: {
             type: Date,
-            default: Date.now,
-            get: (value: Date) => value.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true,
-            }),
+            default: Date.now, // Fix: Direct function reference (no `()`)
         },
     },
     {
-        toJSON: { getters: true },
+        timestamps: true,
+        toJSON: { virtuals: true, getters: true }, 
         id: false,
     }
 );
 
 export default reactionSchema;
+
+
+
+

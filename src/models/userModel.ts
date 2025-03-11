@@ -24,7 +24,10 @@ const userSchema = new Schema<IUser>(
             type: String,
             required: true,
             unique: true,
-            validate: [isEmail, 'Please enter a valid email address']
+            validate: {
+                validator: (email: string) => isEmail(email),
+                message: 'Please enter a valid email address'
+            }
         },
         thoughts: [
             {
@@ -49,12 +52,13 @@ const userSchema = new Schema<IUser>(
     }
 );
 
-// Create ----retrieves the length of the user's `friends` array field on query.
-userSchema.virtual('friendCount').get(function () {
-    return this.friends.length;
+// Ensure `friends` array exists before accessing its length
+userSchema.virtual('friendCount').get(function (this: IUser) {
+    return this.friends ? this.friends.length : 0;
 });
 
 // Create User model
 const User = model<IUser>('User', userSchema);
 
 export default User;
+

@@ -1,138 +1,126 @@
-import { Request, Response } from 'express';
-import { Thought } from '../models';
-import formatTimestamp from '../utils/formatTimestamp';
-
-// Get all thoughts
-export const getThoughts = async (_req: Request, res: Response) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteReaction = exports.createReaction = exports.deleteThought = exports.updateThought = exports.createThought = exports.getSingleThought = exports.getThoughts = void 0;
+const models_1 = require("../models");
+const formatTimestamp_1 = __importDefault(require("../utils/formatTimestamp"));
+const getThoughts = async (_req, res) => {
     try {
-        const thoughts = await Thought.find();
+        const thoughts = await models_1.Thought.find();
         return res.json(thoughts);
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
-// Get a single thought by ID
-export const getSingleThought = async (req: Request, res: Response) => {
+exports.getThoughts = getThoughts;
+const getSingleThought = async (req, res) => {
     try {
         const { thoughtId } = req.params;
-        const thought = await Thought.findById(thoughtId).populate('reactions');
-
+        const thought = await models_1.Thought.findById(thoughtId).populate('reactions');
         if (!thought) {
             return res.status(404).json({ message: 'No thought with that ID' });
         }
-
         return res.json({
             ...thought.toObject(),
-            createdAtFormatted: formatTimestamp(thought.createdAt)
+            createdAtFormatted: (0, formatTimestamp_1.default)(thought.createdAt)
         });
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
-// Create a new thought
-export const createThought = async (req: Request, res: Response) => {
+exports.getSingleThought = getSingleThought;
+const createThought = async (req, res) => {
     try {
-        const newThought = await Thought.create(req.body);
+        const newThought = await models_1.Thought.create(req.body);
         return res.json(newThought);
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
-// Update a thought by ID
-export const updateThought = async (req: Request, res: Response) => {
+exports.createThought = createThought;
+const updateThought = async (req, res) => {
     try {
         const { thoughtId } = req.params;
-        const updatedThought = await Thought.findByIdAndUpdate(
-            thoughtId,
-            { $set: req.body },
-            { new: true, runValidators: true }
-        );
-
+        const updatedThought = await models_1.Thought.findByIdAndUpdate(thoughtId, { $set: req.body }, { new: true, runValidators: true });
         if (!updatedThought) {
             return res.status(404).json({ message: 'No thought found with that ID' });
         }
-
         return res.json(updatedThought);
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
-// Delete a thought by ID
-export const deleteThought = async (req: Request, res: Response) => {
+exports.updateThought = updateThought;
+const deleteThought = async (req, res) => {
     try {
         const { thoughtId } = req.params;
-        const deletedThought = await Thought.findByIdAndDelete(thoughtId);
-
+        const deletedThought = await models_1.Thought.findByIdAndDelete(thoughtId);
         if (!deletedThought) {
             return res.status(404).json({ message: 'No thought found with that ID' });
         }
-
         return res.json({ message: 'Thought successfully deleted' });
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
-// Add a reaction to a thought
-export const createReaction = async (req: Request, res: Response) => {
+exports.deleteThought = deleteThought;
+const createReaction = async (req, res) => {
     try {
         const { thoughtId } = req.params;
-        const thought = await Thought.findById(thoughtId);
-
+        const thought = await models_1.Thought.findById(thoughtId);
         if (!thought) {
             return res.status(404).json({ message: 'No thought found with that ID' });
         }
-
         thought.reactions.push(req.body);
         await thought.save();
-
         return res.json(thought);
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
-// Remove a reaction from a thought
-export const deleteReaction = async (req: Request, res: Response) => {
+exports.createReaction = createReaction;
+const deleteReaction = async (req, res) => {
     try {
         const { thoughtId, reactionId } = req.params;
-        const thought = await Thought.findById(thoughtId);
-
+        const thought = await models_1.Thought.findById(thoughtId);
         if (!thought) {
             return res.status(404).json({ message: 'No thought found with that ID' });
         }
-
         thought.reactions.pull({ _id: reactionId });
         await thought.save();
-
         return res.json(thought);
-    } catch (err: unknown) {
+    }
+    catch (err) {
         if (err instanceof Error) {
             return res.status(500).json({ error: err.message });
         }
         return res.status(500).json({ error: "An unknown error occurred." });
     }
 };
-
+exports.deleteReaction = deleteReaction;

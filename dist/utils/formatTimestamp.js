@@ -1,4 +1,6 @@
-const formatTimestamp = (date: Date): string => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const formatTimestamp = (date) => {
     return date.toLocaleString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -9,5 +11,4 @@ const formatTimestamp = (date: Date): string => {
         hour12: true
     });
 };
-
-export default formatTimestamp;
+exports.default = formatTimestamp;

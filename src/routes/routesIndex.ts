@@ -4,8 +4,9 @@ import thoughtRoutes from './api/thoughtRoutes';
 
 const router = Router();
 
-// Define routes
-router.use('/api/users', userRoutes);
-router.use('/api/thoughts', thoughtRoutes);
+// REMOVE `/api/` from these!
+router.use('/users', userRoutes);
+router.use('/thoughts', thoughtRoutes);
 
 export default router;
+

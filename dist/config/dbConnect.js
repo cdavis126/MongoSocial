@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const dbConnect = async (): Promise<typeof mongoose> => {
+const dbConnect = async () => {
     try {
         await mongoose.connect('mongodb://127.0.0.1:27017/socialnetwork');
         console.log('✅ Database connected.');
